@@ -8,7 +8,7 @@
 		"python_dedicated_snapshot"
 	],
 	"vars": {
-		"MESSAGE": "env message"
+		"MESSAGE": "env message !"
 	},
     "d1_databases": [
           {
