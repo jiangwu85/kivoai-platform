@@ -1,0 +1,23 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "fastapi-worker",
+	"main": "src/worker.py",
+	"compatibility_date": "2025-11-02",
+	"compatibility_flags": [
+		"python_workers",
+		"python_dedicated_snapshot"
+	],
+	"vars": {
+		"MESSAGE": "My env var"
+	},
+    "d1_databases": [
+          {
+              "binding": "DB", // i.e. available in your Worker on env.DB
+              "database_name": "my_db", // REPLACE WITH YOUR DB NAME
+              "database_id": "5b9c947c-277a-4bc5-a10f-b2ce24e3594b" // REPLACE WITH YOUR DB ID
+          }
+      ],
+	"observability": {
+		"enabled": true
+	}
+}
