@@ -15,7 +15,7 @@ def get_items():
     return {"message": "This is from v1"}
 
 
-@router_v2.get("/")
+@router_v1.get("/")
 async def root():
     message = "This is an example of FastAPI with Jinja2 - go to /hi/<name> to see a template rendered"
     return {"message": message}
