@@ -11,18 +11,18 @@ from utils.tools import import_module
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
 app = FastAPI()
-import_module(settings.MIDDLEWARES, "中间件", app=app)
+#import_module(settings.MIDDLEWARES, "中间件", app=app)
 # 全局异常捕捉处理
 register_exception(app)
 # 跨域解决
-if settings.CORS_ORIGIN_ENABLE:
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=settings.ALLOW_ORIGINS,
-        allow_credentials=settings.ALLOW_CREDENTIALS,
-        allow_methods=settings.ALLOW_METHODS,
-        allow_headers=settings.ALLOW_HEADERS
-    )
+# if settings.CORS_ORIGIN_ENABLE:
+#     app.add_middleware(
+#         CORSMiddleware,
+#         allow_origins=settings.ALLOW_ORIGINS,
+#         allow_credentials=settings.ALLOW_CREDENTIALS,
+#         allow_methods=settings.ALLOW_METHODS,
+#         allow_headers=settings.ALLOW_HEADERS
+#     )
 # 挂在静态目录
 if settings.STATIC_ENABLE:
     app.mount(settings.STATIC_URL, app=StaticFiles(directory=settings.STATIC_ROOT))
