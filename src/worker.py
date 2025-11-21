@@ -1,10 +1,12 @@
 
 from fastapi import FastAPI, Request,APIRouter
 from workers import WorkerEntrypoint
+from exception import register_exception
 
 
 
 app = FastAPI()
+register_exception(app)
 router_v1 = APIRouter()
 router_v2 = APIRouter()
 
