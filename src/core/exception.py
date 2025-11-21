@@ -12,8 +12,6 @@ from starlette import status
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI
-from core.logger import logger
-
 
 class CustomException(Exception):
 
@@ -35,8 +33,6 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到重写CustomException异常异常：custom_exception_handler")
-        #logger.error(exc.desc)
-        #logger.error(exc.msg)
         print(exc.desc)
         print(exc.msg)
         return JSONResponse(
@@ -51,7 +47,6 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到重写HTTPException异常异常：unicorn_exception_handler")
-        #logger.error(exc.detail)
         print(exc.detail)
         return JSONResponse(
             status_code=200,
@@ -68,7 +63,6 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到重写请求验证异常异常：validation_exception_handler")
-        #logger.error(exc.errors())
         print(exc.errors())
         msg = exc.errors()[0].get("msg")
         if msg == "field required":
@@ -98,7 +92,6 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到值异常：value_exception_handler")
-        #logger.error(exc.__str__())
         print(exc.__str__())
         return JSONResponse(
             status_code=200,
@@ -117,7 +110,7 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到全局异常：all_exception_handler")
-        #logger.error(exc.__str__())
+        print(exc.__str__())
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=jsonable_encoder(
