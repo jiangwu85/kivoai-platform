@@ -1,9 +1,8 @@
-import jinja2
-from fastapi import FastAPI, Request,APIRouter
-from workers import WorkerEntrypoint
 
-environment = jinja2.Environment()
-template = environment.from_string("Hello, {{ name }}!")
+from fastapi import FastAPI, Request,APIRouter
+
+
+
 
 app = FastAPI()
 router_v1 = APIRouter()
@@ -22,21 +21,19 @@ async def root():
 
 @router_v2.get("/hi/{name}")
 async def say_hi(name: str):
-    message = template.render(name=name)
-    return {"message": message}
+    return {"message": "msg: ｛name｝" }
 
 
 @router_v2.get("/env")
 async def env(req: Request):
-    env = req.scope["env"]
-    message = f"Here is an example of getting an environment variable---: {env.MESSAGE}"
+    message = "Here is an example of getting an environment variable---:"
     return {"message": message}
 
 
 app.include_router(router_v1, prefix="/v1")
 app.include_router(router_v2, prefix="/v2")
 
-class Default(WorkerEntrypoint):
-    async def fetch(self, request):
-        import asgi
-        return await asgi.fetch(app, request.js_object, self.env)
+# class Default(WorkerEntrypoint):
+#     async def fetch(self, request):
+#         import asgi
+#         return await asgi.fetch(app, request.js_object, self.env)
