@@ -1,5 +1,5 @@
 {
-	"name": "kivoai-platform",
+	"name": "fastapi-worker",
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {

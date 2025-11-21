@@ -1,5 +1,5 @@
 [project]
-name = "kivoai-platform"
+name = "fastapi-worker"
 version = "0.1.0"
 description = "Python fastapi example"
 readme = "README.md"
