@@ -12,6 +12,7 @@ from starlette import status
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi import FastAPI
+import traceback
 
 class CustomException(Exception):
 
@@ -110,7 +111,7 @@ def register_exception(app: FastAPI):
         """
         print("请求地址", request.url.__str__())
         print("捕捉到全局异常：all_exception_handler")
-        print(exc.__str__())
+        traceback.print_exc()
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=jsonable_encoder(
