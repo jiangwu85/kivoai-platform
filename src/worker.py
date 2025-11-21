@@ -11,7 +11,7 @@ router_v1 = APIRouter()
 router_v2 = APIRouter()
 
 @router_v1.get("/items/")
-def get_items():
+async def get_items():
     return {"message": "This is from v1"}
 
 
