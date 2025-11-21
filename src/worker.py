@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI, Request,APIRouter
-
+from workers import WorkerEntrypoint
 
 
 
@@ -33,7 +33,7 @@ async def env(req: Request):
 app.include_router(router_v1, prefix="/v1")
 app.include_router(router_v2, prefix="/v2")
 
-# class Default(WorkerEntrypoint):
-#     async def fetch(self, request):
-#         import asgi
-#         return await asgi.fetch(app, request.js_object, self.env)
+class Default(WorkerEntrypoint):
+    async def fetch(self, request):
+        import asgi
+        return await asgi.fetch(app, request.js_object, self.env)
