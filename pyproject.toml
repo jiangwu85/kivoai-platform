@@ -9,6 +9,9 @@ dependencies = [
     "fastapi",
     "markupsafe",
     "jinja2",
+    "pydantic",
+    "loguru",
+    "orjson",
 ]
 
 [dependency-groups]

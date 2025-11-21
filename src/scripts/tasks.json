@@ -1,0 +1,8 @@
+[
+    {
+        "value": "scripts.baidu_hot_search.baidu_hot_search.spiders.ranking_list",
+        "label": "百度热搜",
+        "desc": "获取百度热搜榜数据",
+        "create_time": "2021-10-26 20:50:00"
+    }
+]
