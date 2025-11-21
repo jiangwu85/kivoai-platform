@@ -19,7 +19,7 @@ def write_request_log(request: Request, response: Response):
     content_length = response.raw_headers[0][1]
     process_time = response.headers["X-Process-Time"]
     content = f"basehttp.log_message: '{request.method} {request.url} {http_version}' {response.status_code} {response.charset} {content_length} {process_time}"
-    logger.info(content)
+    #logger.info(content)
 
 
 def register_middleware(app: FastAPI):
