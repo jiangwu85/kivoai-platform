@@ -64,8 +64,11 @@ async def db(req: Request):
             ORDER BY RANDOM() LIMIT 1;
             """
     env = req.scope["env"]
+    print("--------1--------")
     results = await env.DB.prepare(query).all()
+    print("--------2--------")
     data = results.results[0]
+    print("--------3--------")
     return {"message": data}
 
 
