@@ -1,6 +1,6 @@
 import jinja2
 from workers import WorkerEntrypoint
-from fastapi import FastAPI,Request,Response
+from fastapi import FastAPI,Request
 from application import settings
 from application import urls
 from core import register_exception
@@ -66,7 +66,7 @@ async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare(query).all()
     data = results.results[0]
-    return {"message": Response.json(data)}
+    return {"message": data}
 
 
 class Default(WorkerEntrypoint):
