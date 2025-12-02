@@ -12,6 +12,7 @@ dependencies = [
     "pydantic",
     "loguru",
     "orjson",
+    "typing",
 ]
 
 [dependency-groups]
