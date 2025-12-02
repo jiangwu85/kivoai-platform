@@ -52,7 +52,7 @@ async def env(req: Request):
 async def redis(req: Request,key: str,val: str):
     env = req.scope["env"]
     env.REDIS.put(key,val)
-    bar = env.FOO.get(key)
+    bar = env.REDIS.get(key)
     return {"val": bar}
 
 
