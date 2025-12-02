@@ -48,6 +48,16 @@ async def env(req: Request):
     message = f"Here is an example of getting an environment variable---: {env.MESSAGE}"
     return {"message": message}
 
+@app.get("/db")
+async def env(req: Request):
+    query = """
+        SELECT email, firstName,lastName
+        FROM user        
+        LIMIT 1;
+        """
+    results = req.scope["env"].DB.prepare(query).all()
+    return {"message": results.results[0]}
+
 
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
