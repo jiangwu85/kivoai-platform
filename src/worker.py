@@ -7,6 +7,7 @@ from core import register_exception
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from utils.tools import import_module
+from pyodide.ffi import to_js
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
@@ -66,12 +67,12 @@ async def db(req: Request):
     env = req.scope["env"]
     print("--------1--------")
     results = await env.DB.prepare(query).all()
-    print(vars(results))
     print("--------2--------")
-    data = results.results[0]
-    print(vars(data))
+    dataList = results.results
     print("--------3--------")
-
+    data = dataList[0]
+    for item in data:
+        print(item)
     return {"message": data}
 
 
