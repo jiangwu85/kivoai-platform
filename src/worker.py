@@ -3,8 +3,10 @@ from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import asgi
 
+SDB = None  # Placeholder for database connection if needed
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
+        SDB = self.env.DB
         return await asgi.fetch(app, request, self.env)
 
 app = FastAPI()
@@ -16,7 +18,15 @@ async def root():
 @app.get("/env")
 async def root(req: Request):
     env = req.scope["env"]
-    return {"message": "Here is an example of getting an environment variable: " + env.MESSAGE}
+    query = """
+        SELECT quote, author
+        FROM qtable
+        ORDER BY RANDOM()
+        LIMIT 1;
+        """
+    results = SDB.prepare(query).all()
+    data = results.results[0]
+    return {"message": "Here is an example of getting an environment variable: " + env.MESSAGE,"data": data}
 
 class Item(BaseModel):
     name: str
