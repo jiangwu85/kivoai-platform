@@ -1,5 +1,6 @@
 import jinja2
-from workers import WorkerEntrypoint, Response
+from workers import WorkerEntrypoint
+from js import Response
 from fastapi import FastAPI,Request
 from application import settings
 from application import urls
@@ -73,8 +74,7 @@ async def db(req: Request):
     data = dataList[0]
     rd = Response.json(data)
     print(rd)
-
-    return {"message": rd}
+    return {"message": Response.json(rd)}
 
 
 class Default(WorkerEntrypoint):
