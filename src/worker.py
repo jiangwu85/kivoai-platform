@@ -1,6 +1,5 @@
 import jinja2
-from workers import WorkerEntrypoint
-from js import Response
+from workers import WorkerEntrypoint,Response
 from fastapi import FastAPI,Request
 from application import settings
 from application import urls
@@ -56,6 +55,14 @@ async def redis(req: Request,key: str,val: str):
     await env.REDIS.put(key,val)
     bar = await env.REDIS.get(key)
     return {"val": bar}
+
+
+@app.get("/db1")
+async def db1(req: Request):
+    env = req.scope["env"]
+    results = env.DB.prepare("PRAGMA table_list").run()
+    # Return a JSON response
+    return Response.json(results)
 
 
 @app.get("/db")
