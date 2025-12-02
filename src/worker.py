@@ -28,15 +28,16 @@ async def env(req: Request):
 
 
 @app.get("/db")
-async def db(req: Request):
+async def db(self,req: Request):
     query = """
         SELECT quote, author
         FROM qtable
         ORDER BY RANDOM()
         LIMIT 1;
         """
-    results = req.scope["env"].DB.prepare(query).all()
+    results = self.env.DB.prepare(query).all()
     data = results.results[0]
+    print(data)
     return {"data": data}
 
 
@@ -49,7 +50,7 @@ class Default(WorkerEntrypoint):
                 ORDER BY RANDOM()
                 LIMIT 1;
                 """
-        results = await self.env.DB.prepare(query).all()
+        results = self.env.DB.prepare(query).all()
         data = results.results[0]
         print(data)
         return await asgi.fetch(app, request.js_object, self.env)
