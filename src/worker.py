@@ -48,6 +48,14 @@ async def env(req: Request):
     message = f"Here is an example of getting an environment variable---: {env.MESSAGE}"
     return {"message": message}
 
+@app.get("/redis")
+async def redis(req: Request,key: str,val: str):
+    env = req.scope["env"]
+    env.REDIS.put(key,val)
+    bar = env.FOO.get(key)
+    return {"val": bar}
+
+
 @app.get("/db")
 async def env(req: Request):
     query = """

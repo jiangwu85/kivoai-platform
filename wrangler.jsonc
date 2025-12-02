@@ -10,6 +10,12 @@
 	"vars": {
 		"MESSAGE": "env message !"
 	},
+    "kv_namespaces": [
+          {
+              "binding": "REDIS",
+              "id": "46bfcecf3134420ebb6841d26b2ac8c9"
+          }
+      ],
     "d1_databases": [
           {
               "binding": "DB", // i.e. available in your Worker on env.DB
