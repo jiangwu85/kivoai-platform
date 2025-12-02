@@ -1,6 +1,6 @@
 import jinja2
 from workers import WorkerEntrypoint
-from fastapi import FastAPI,Request
+from fastapi import FastAPI,Request,Response
 from application import settings
 from application import urls
 from core import register_exception
@@ -57,15 +57,16 @@ async def redis(req: Request,key: str,val: str):
 
 
 @app.get("/db")
-async def env(req: Request):
+async def db(req: Request):
     query = """
-        SELECT email, firstName,lastName
-        FROM user        
-        LIMIT 1;
-        """
+            SELECT quote, author
+            FROM qtable
+            ORDER BY RANDOM() LIMIT 1;
+            """
     env = req.scope["env"]
     results = await env.DB.prepare(query).all()
-    return {"message": results.results[0]}
+    data = results.results[0]
+    return {"message": Response.json(data)}
 
 
 class Default(WorkerEntrypoint):
