@@ -51,8 +51,8 @@ async def env(req: Request):
 @app.get("/redis")
 async def redis(req: Request,key: str,val: str):
     env = req.scope["env"]
-    env.REDIS.put(key,val)
-    bar = env.REDIS.get(key)
+    await env.REDIS.put(key,val)
+    bar = await env.REDIS.get(key)
     return {"val": bar}
 
 
