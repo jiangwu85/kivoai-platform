@@ -116,7 +116,7 @@ def register_exception(app: FastAPI):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content=jsonable_encoder(
                 {
-                    "message": "接口异常！",
+                    "message":  exc.__str__(),
                     "code": status.HTTP_500_INTERNAL_SERVER_ERROR
                 }
             ),

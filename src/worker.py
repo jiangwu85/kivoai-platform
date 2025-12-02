@@ -63,7 +63,8 @@ async def env(req: Request):
         FROM user        
         LIMIT 1;
         """
-    results = req.scope["env"].DB.prepare(query).all()
+    env = req.scope["env"]
+    results = await env.DB.prepare(query).all()
     return {"message": results.results[0]}
 
 
