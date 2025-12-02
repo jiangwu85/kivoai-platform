@@ -63,7 +63,7 @@ async def db1(req: Request):
     env = req.scope["env"]
     results = env.DB.prepare("PRAGMA table_list").run()
     # Return a JSON response
-    return Response.json(results)
+    return results.to_py()
 
 
 @app.get("/db")
