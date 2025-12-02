@@ -1,6 +1,6 @@
 import jinja2
 from workers import WorkerEntrypoint
-from fastapi import FastAPI
+from fastapi import FastAPI,Request
 from application import settings
 from application import urls
 from core import register_exception
@@ -42,11 +42,11 @@ for url in urls.urlpatterns:
 #     return {"message": message}
 #
 #
-# @app.get("/env")
-# async def env(req: Request):
-#     env = req.scope["env"]
-#     message = f"Here is an example of getting an environment variable---: {env.MESSAGE}"
-#     return {"message": message}
+@app.get("/env")
+async def env(req: Request):
+    env = req.scope["env"]
+    message = f"Here is an example of getting an environment variable---: {env.MESSAGE}"
+    return {"message": message}
 
 
 class Default(WorkerEntrypoint):

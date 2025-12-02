@@ -27,7 +27,7 @@ async def app_root(req: Request,register: Register):
     results = self.env.DB.prepare(query).all()
     print(results)
     data = results.results[0]
-    print(results)
+    print(data)
 
     data = {
         "当前时间": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
