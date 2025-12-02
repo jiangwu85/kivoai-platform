@@ -20,14 +20,12 @@ async def app_root(req: Request,register: Register):
         FROM user        
         LIMIT 1;
         """
-    results = await req.scope["env"].DB.prepare(query).all()
-    result = results.results[0]
-
+    results = await req.scope["env"];
+    print(results)
     data = {
         "当前时间": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
         "test": "聊天室",
-        "register": register.dict(),
-        "result": result
+        "register": register.dict()
     }
 
     return SuccessResponse(data=data)
