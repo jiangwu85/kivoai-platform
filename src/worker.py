@@ -59,42 +59,11 @@ async def redis(req: Request,key: str,val: str):
 
 
 @app.get("/db")
-async def db(req: Request):
-    query = """
-            SELECT quote, author
-            FROM qtable
-            ORDER BY RANDOM() LIMIT 1;
-            """
+async def db(req: Request,name: str):
+    query = "insert into recruiter values (\""+name+"\")"
     env = req.scope["env"]
-    print("--------1--------")
-    results = await env.DB.prepare(query).all()
-    return Response.json(results)
-
-
-@app.get("/db1")
-async def db1(req: Request):
-    query = """
-            SELECT quote, author
-            FROM qtable
-            ORDER BY RANDOM() LIMIT 1;
-            """
-    env = req.scope["env"]
-    print("--------1--------")
-    results = await env.DB.prepare(query).all()
-    return results.results.to_json()
-
-
-@app.get("/db2")
-async def db2(req: Request):
-    query = """
-            SELECT quote, author
-            FROM qtable
-            ORDER BY RANDOM() LIMIT 1;
-            """
-    env = req.scope["env"]
-    print("--------1--------")
-    results = await env.DB.prepare(query).all()
-    return results.results[0].to_json()
+    await env.DB.prepare(query).run()
+    return {"db":name}
 
 
 
