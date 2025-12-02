@@ -61,7 +61,7 @@ async def redis(req: Request,key: str,val: str):
 @app.get("/db1")
 async def db1(req: Request):
     env = req.scope["env"]
-    results = env.DB.prepare("PRAGMA table_list").run()
+    results = await env.DB.prepare("PRAGMA table_list").run()
     # Return a JSON response
     return results.to_py()
 
