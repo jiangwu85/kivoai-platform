@@ -71,21 +71,6 @@ async def db(req: Request):
     return Response.json(results)
 
 
-@app.get("/db0")
-async def db0(req: Request):
-    query = """
-            SELECT quote, author
-            FROM qtable
-            ORDER BY RANDOM() LIMIT 1;
-            """
-    env = req.scope["env"]
-    print("--------1--------")
-    results = await env.DB.prepare(query).all()
-    list = list(results.results)
-    return {"msg":list}
-
-
-
 @app.get("/db1")
 async def db1(req: Request):
     query = """
@@ -94,10 +79,23 @@ async def db1(req: Request):
             ORDER BY RANDOM() LIMIT 1;
             """
     env = req.scope["env"]
+    print("--------1--------")
     results = await env.DB.prepare(query).all()
-    result = results.results[0]
-    dict = dict(result)
-    return {"dict":dict}
+    return results.results.to_json()
+
+
+@app.get("/db2")
+async def db2(req: Request):
+    query = """
+            SELECT quote, author
+            FROM qtable
+            ORDER BY RANDOM() LIMIT 1;
+            """
+    env = req.scope["env"]
+    print("--------1--------")
+    results = await env.DB.prepare(query).all()
+    return results.results[0].to_json()
+
 
 
 class Default(WorkerEntrypoint):
