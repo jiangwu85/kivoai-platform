@@ -66,10 +66,10 @@ async def db(req: Request):
     env = req.scope["env"]
     print("--------1--------")
     results = await env.DB.prepare(query).all()
-    print(results)
+    print(vars(results))
     print("--------2--------")
     data = results.results[0]
-    print(data)
+    print(vars(data))
     print("--------3--------")
 
     return {"message": data}
