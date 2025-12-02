@@ -13,7 +13,7 @@
     "d1_databases": [
           {
               "binding": "DB", // i.e. available in your Worker on env.DB
-              "database_name": "my_db", // REPLACE WITH YOUR DB NAME
+              "database_name": "db1", // REPLACE WITH YOUR DB NAME
               "database_id": "5b9c947c-277a-4bc5-a10f-b2ce24e3594b" // REPLACE WITH YOUR DB ID
           }
       ],

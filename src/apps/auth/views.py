@@ -14,11 +14,21 @@ class Register(BaseModel):
     phone: Optional[str] = None
     password: str
 @app.post("/register", summary="register")
-async def app_root(register: Register):
+async def app_root(self,register: Register):
+    query = """
+        SELECT email, firstName,lastName
+        FROM user        
+        LIMIT 1;
+        """
+    results = await self.env.DB.prepare(query).all()
+    result = results.results[0]
+
     data = {
         "当前时间": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
         "test": "聊天室",
-        "register": register.dict()
+        "register": register.dict(),
+        "result": result
     }
+
     return SuccessResponse(data=data)
 
