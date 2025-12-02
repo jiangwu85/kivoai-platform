@@ -69,6 +69,7 @@ async def db(req: Request):
     print("--------2--------")
     data = results.results[0]
     print("--------3--------")
+    print(data)
     return {"message": data}
 
 
