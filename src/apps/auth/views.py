@@ -1,6 +1,6 @@
 import time
 
-from fastapi import APIRouter
+from fastapi import APIRouter,Request
 from utils.response import SuccessResponse
 from pydantic import BaseModel
 from typing import Optional
@@ -14,13 +14,13 @@ class Register(BaseModel):
     phone: Optional[str] = None
     password: str
 @app.post("/register", summary="register")
-async def app_root(self,register: Register):
+async def app_root(req: Request,register: Register):
     query = """
         SELECT email, firstName,lastName
         FROM user        
         LIMIT 1;
         """
-    results = await self.env.DB.prepare(query).all()
+    results = await req.scope["env"].DB.prepare(query).all()
     result = results.results[0]
 
     data = {
