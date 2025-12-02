@@ -62,4 +62,4 @@ async def env(req: Request):
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
         import asgi
-        return await asgi.fetch(app, request, self)
+        return await asgi.fetch(app, request.js_object, self.env)
