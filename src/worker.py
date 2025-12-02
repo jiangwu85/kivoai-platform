@@ -27,6 +27,19 @@ async def env(req: Request):
     return {"message": message}
 
 
+@app.get("/db")
+async def db(req: Request):
+    query = """
+        SELECT quote, author
+        FROM qtable
+        ORDER BY RANDOM()
+        LIMIT 1;
+        """
+    results = req.scope["env"].DB.prepare(query).all()
+    data = results.results[0]
+    return {"data": data}
+
+
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
         import asgi
