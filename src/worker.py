@@ -43,5 +43,13 @@ async def db(req: Request):
 class Default(WorkerEntrypoint):
     async def fetch(self, request):
         import asgi
-
+        query = """
+                SELECT quote, author
+                FROM qtable
+                ORDER BY RANDOM()
+                LIMIT 1;
+                """
+        results = await self.env.DB.prepare(query).all()
+        data = results.results[0]
+        print(data)
         return await asgi.fetch(app, request.js_object, self.env)
