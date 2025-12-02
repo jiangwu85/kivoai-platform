@@ -68,13 +68,20 @@ async def db(req: Request):
     env = req.scope["env"]
     print("--------1--------")
     results = await env.DB.prepare(query).all()
-    print("--------2--------")
-    dataList = results.results
-    print("--------3--------")
-    data = dataList[0]
-    rd = Response.json(data)
-    print(rd)
-    return {"message": Response.json(rd)}
+    return Response.json(results)
+
+
+
+@app.get("/db1")
+async def db1(req: Request):
+    query = """
+            SELECT quote, author
+            FROM qtable
+            ORDER BY RANDOM() LIMIT 1;
+            """
+    env = req.scope["env"]
+    results = await env.DB.prepare(query).all()
+    return Response.json(results.results)
 
 
 class Default(WorkerEntrypoint):
