@@ -24,7 +24,23 @@ async def register(req: Request,reg: Register):
 @app.post("/login", summary="register")
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
-    results = await env.DB.prepare('select * from "user" where email=?').bind(lg.email).run()
+    results = await env.DB.prepare('select * from user where email=?').bind(lg.email).run()
+    results = results.results
+    result = results.to_py()
+    # if(result == False):
+    #     return ErrorResponse(code=401,data="User password incorrect!")
+    data = {
+        "user": result,
+        "accessToken": "1",
+        "refreshToken": "1",
+        "expiresDateTime": time.time_ns(),
+    }
+    return SuccessResponse(data=data)
+@app.post("/login0", summary="register")
+async def login0(req: Request,lg: Login):
+    env = req.scope["env"]
+    results = await env.DB.prepare('select * from user').run()
+    results = results.results
     result = results.to_py()
     # if(result == False):
     #     return ErrorResponse(code=401,data="User password incorrect!")
