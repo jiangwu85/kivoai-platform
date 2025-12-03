@@ -41,7 +41,7 @@ async def db1(req: Request):
     results = results.to_py()
     # Return a JSON response
     return {"code": 200,"message": "success","data": results}
-@app.get("/login")
+@app.post("/login")
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user where email=?").bind(lg.email).run()
