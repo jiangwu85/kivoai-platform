@@ -83,3 +83,11 @@ async def db1(req: Request):
     results = results.to_py()
     # Return a JSON response
     return {"code": 200,"message": "success","data": results}
+@app.get("/db2")
+async def db2(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user where email=?").bind("273617974@qq.com").run()
+    results = results.results
+    results = results.to_py()
+    # Return a JSON response
+    return {"code": 200,"message": "success","data": results}
