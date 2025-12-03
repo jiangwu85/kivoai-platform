@@ -4,6 +4,8 @@ from fastapi import APIRouter,Request
 from utils.response import SuccessResponse,ErrorResponse
 from core.moudles import Register,Login
 from crud import common
+import orjson
+
 app = APIRouter()
 
 
@@ -38,7 +40,17 @@ async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
     results = results.results
+    #results = results.to_py()
+    results = orjson.dumps(results)
+    # Return a JSON response
+    return SuccessResponse(data= {"code": 200,"message": "success","data": results})
+@app.get("/db0")
+async def db(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user").run()
+    results = results.results
     results = results.to_py()
+    results = orjson.dumps(results)
     # Return a JSON response
     return SuccessResponse(data= {"code": 200,"message": "success","data": results})
 @app.get("/db1")
