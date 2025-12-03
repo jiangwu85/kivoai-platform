@@ -9,7 +9,10 @@ app = APIRouter()
 
 @app.post("/register", summary="register")
 async def app_root(req: Request,register: Register):
-    result = await common.register(req,register)
+    env = req.scope["env"]
+    results = await env.DB.prepare('INSERT INTO "main"."user" ("email", "password", "status", "role", "firstName", "lastName", "phone") VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
+    #results = results.results
+    result = results.to_py()
     data = {
         "user": result,
         "accessToken": "1",
@@ -20,7 +23,9 @@ async def app_root(req: Request,register: Register):
 
 @app.post("/login", summary="register")
 async def app_root(req: Request,login: Login):
-    result = await common.login(req,login)
+    env = req.scope["env"]
+    results = await env.DB.prepare('select * from user where email=?').bind(reg.email).run()
+    result = results.to_py()
     # if(result == False):
     #     return ErrorResponse(code=401,data="User password incorrect!")
     data = {

@@ -12,7 +12,7 @@ def login(req: Request,reg: Login):
     env = req.scope["env"]
     results = env.DB.prepare('select * from user where email=?').bind(reg.email).run()
     #results = results.results
-    results = results.to_py()
+    #results = results.to_py()
     # if len(results)==1:
     #     return results[0]
     return results
