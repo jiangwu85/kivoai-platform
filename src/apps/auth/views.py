@@ -10,7 +10,7 @@ app = APIRouter()
 @app.post("/register", summary="register")
 async def register(req: Request,reg: Register):
     env = req.scope["env"]
-    results = await env.DB.prepare('INSERT INTO "main"."user" ("email", "password", "status", "role", "firstName", "lastName", "phone") VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
+    results = await env.DB.prepare('INSERT INTO "user" ("email", "password", "status", "role", "firstName", "lastName", "phone") VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
     #results = results.results
     result = results.to_py()
     data = {
@@ -24,7 +24,7 @@ async def register(req: Request,reg: Register):
 @app.post("/login", summary="register")
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
-    results = await env.DB.prepare('select * from user where email=?').bind(lg.email).run()
+    results = await env.DB.prepare('select * from "user" where email=?').bind(lg.email).run()
     result = results.to_py()
     # if(result == False):
     #     return ErrorResponse(code=401,data="User password incorrect!")
@@ -59,4 +59,11 @@ async def login1(req: Request,lg: Login):
     }
     return SuccessResponse(data=data)
 
-
+@app.get("/db1")
+async def db1(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user").run()
+    results = results.results
+    results = results.to_py()
+    # Return a JSON response
+    return {"code": 200,"message": "success","data": results}
