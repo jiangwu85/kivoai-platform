@@ -10,7 +10,7 @@ async def register(req: Request,reg: Register):
 
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
-    results = await env.DB.prepare('select * from user where email=?').bind(lg.email).run()
+    results = await env.DB.prepare("select * from user where email=?").bind(lg.email).run()
     #results = results.results
     results = results.to_py()
     # if len(results)==1:

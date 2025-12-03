@@ -39,7 +39,7 @@ async def login(req: Request,lg: Login):
 @app.post("/login0", summary="register")
 async def login0(req: Request,lg: Login):
     env = req.scope["env"]
-    results = await env.DB.prepare('select * from user').run()
+    results = await env.DB.prepare("select * from user").run()
     results = results.results
     result = results.to_py()
     # if(result == False):
