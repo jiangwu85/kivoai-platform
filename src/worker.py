@@ -1,6 +1,5 @@
 import jinja2
 from workers import WorkerEntrypoint
-from js import Response
 from fastapi import FastAPI,Request
 from application import settings
 from application import urls
@@ -8,7 +7,6 @@ from core import register_exception
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
 from utils.tools import import_module
-from pyodide.ffi import to_js
 
 environment = jinja2.Environment()
 template = environment.from_string("Hello, {{ name }}!")
