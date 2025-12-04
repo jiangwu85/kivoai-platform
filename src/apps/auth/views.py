@@ -35,7 +35,7 @@ async def login(req: Request,lg: Login):
     return SuccessResponse(data=data)
 
 
-@app.post("/out")
+@app.post("/logout")
 async def logout(req: Request,token: str = Depends(authenticate)):
     env = req.scope["env"]
     await env.REDIS.delete(token)
