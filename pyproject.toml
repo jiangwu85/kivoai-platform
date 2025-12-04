@@ -13,6 +13,7 @@ dependencies = [
     "loguru",
     "orjson",
     "typing",
+    "jwt",
 ]
 
 [dependency-groups]
