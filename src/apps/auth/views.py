@@ -47,4 +47,4 @@ async def get_current_user(request: Request):
 
 @app.get("/me")
 async def get_headers_with_header(current_user: Any = Depends(get_current_user)):
-    return current_user
+    return SuccessResponse(data=current_user)
