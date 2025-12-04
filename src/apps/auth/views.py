@@ -37,6 +37,10 @@ async def login(req: Request,lg: Login):
 
 @app.post("/logout")
 async def logout(req: Request,token: str = Depends(authenticate)):
+    print("logout token:", token)
     env = req.scope["env"]
     await env.REDIS.delete(token)
-    return SuccessResponse(data="OK")
+    data = {
+        "expiresDateTime": time.time()
+    }
+    return SuccessResponse(data=data)
