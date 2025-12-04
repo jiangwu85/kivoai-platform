@@ -1,6 +1,7 @@
 import time
 
 from fastapi import APIRouter,Request
+from fastapi.encoders import jsonable_encoder
 from utils.response import SuccessResponse,ErrorResponse
 from core.moudles import Register,Login
 from crud import common
@@ -49,8 +50,17 @@ async def db(req: Request):
     results = await env.DB.prepare("select * from user").run()
     results = results.results
     results = results.to_py()
+    json_compatible_data = jsonable_encoder(results)
     # Return a JSON response
-    return SuccessResponse(data=results)
+    return SuccessResponse(data=json_compatible_data)
+@app.get("/db00")
+async def db(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user").run()
+    results = results.results
+    json_compatible_data = jsonable_encoder(results)
+    # Return a JSON response
+    return SuccessResponse(data=json_compatible_data)
 @app.get("/db1")
 async def db1(req: Request):
     env = req.scope["env"]
