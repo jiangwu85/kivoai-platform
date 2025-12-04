@@ -33,9 +33,10 @@ async def login(req: Request,lg: Login):
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
-@app.get("/get_headers_with_header")
-async def get_headers_with_header(user_agent: str = Header(None), custom_header: str = Header(None)):
+async def getToken(accessToken: str = Header(None)):
+    return accessToken
+@app.get("/me")
+async def get_headers_with_header(accessToken: str = Depends(getToken)):
     return {
-        "User-Agent": user_agent,
-        "Custom-Header": custom_header
+        "accessToken": accessToken
     }
