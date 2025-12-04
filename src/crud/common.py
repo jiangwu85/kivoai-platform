@@ -26,7 +26,7 @@ async def get_user_by_email(env: Any, email: str):
     return result
 
 async def login(env: Any,lg: Login):
-    user = get_user_by_email(env, lg.email)
+    user = await get_user_by_email(env, lg.email)
     if not user:
         raise HTTPException(status_code=400, detail="email or password error!")
     return user
