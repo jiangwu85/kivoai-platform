@@ -13,13 +13,13 @@ class Register(BaseModel):
     birthDate: Optional[str] = Field(default="")
     location: Optional[str] = Field(default="")
     bio: Optional[str] = Field(default="")
-    # @field_validator('email')
-    # def validate_email(self, value):
-    #     return vali_email(value)
+    @field_validator('email')
+    def check_email(cls, v):
+        return vali_email(v)
 
 class Login(BaseModel):
     email: str
-    password: str = Field(min_length=5,  default="273617974@qq.com")
+    password: str = Field(min_length=6, default="123456")
 
     @field_validator('email')
     def check_email(cls, v):
