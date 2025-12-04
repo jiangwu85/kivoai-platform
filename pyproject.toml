@@ -13,7 +13,7 @@ dependencies = [
     "loguru",
     "orjson",
     "typing",
-    "jwt",
+    "PyJWT",
     "passlib",
 ]
 
