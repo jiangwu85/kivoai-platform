@@ -19,6 +19,7 @@ async def register(env: Any,reg: Register):
 
 async def get_user_by_email(env: Any, email: str):
     results = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(email).run()
+    print("results len:"+len(results))
     result = results.results[0]
     result = jsonable_encoder(result.to_py())
     return result
