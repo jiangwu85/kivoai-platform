@@ -19,16 +19,17 @@ async def register(env: Any,reg: Register):
 
 async def get_user_by_email(env: Any, email: str):
     results = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(email).run()
-    print("results len:"+len(results))
+    if len(results) == 0:
+        return None
     result = results.results[0]
     result = jsonable_encoder(result.to_py())
     return result
 
 async def login(env: Any,lg: Login):
-    results = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(lg.email).run()
-    result = results.results[0]
-    result = jsonable_encoder(result.to_py())
-    return result
+    user = get_user_by_email(env, lg.email)
+    if not user:
+        raise HTTPException(status_code=400, detail="email or password error!")
+    return user
 
 async def get_user_redis(env: Any,access_token: str):
     user_data = await env.REDIS.get(access_token)
