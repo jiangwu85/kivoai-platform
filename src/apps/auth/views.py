@@ -13,7 +13,7 @@ app = APIRouter()
 async def register(req: Request,reg: Register):
     result = await common.register(req.scope["env"], reg)
     data = {
-        "reg": reg,
+        "reg": jsonable_encoder(reg),
         "user": result,
         "accessToken": "1",
         "refreshToken": "1",
@@ -25,7 +25,7 @@ async def register(req: Request,reg: Register):
 async def login(req: Request,lg: Login):
     result = await common.login(req.scope["env"],lg)
     data = {
-        "lg": lg,
+        "lg": jsonable_encoder(lg),
         "user": result,
         "accessToken": "1",
         "refreshToken": "1",
