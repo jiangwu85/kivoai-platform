@@ -35,10 +35,10 @@ async def login(req: Request,lg: Login):
     return SuccessResponse(data=data)
 async def getCurrentUser(request: Request):
     headers = request.headers
-    accessToken = headers.get('accessToken')
+    accessToken = headers.get('authorization')
     if not accessToken:
         raise ValueError("Missing authentication!")
-    return getCurrentUser(request.scope["env"], accessToken)
+    return common.getUserRedis(request.scope["env"],accessToken)
 @app.get("/me")
 async def get_headers_with_header(currentUser: Any = Depends(getCurrentUser)):
     return currentUser
