@@ -72,6 +72,22 @@ async def db2(req: Request):
     # Return a JSON response
     return {"code": 200,"message": "success","data": results}
 
+@app.get("/db3")
+async def db3(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user").run()
+    results = results.to_py()
+    # Return a JSON response
+    return {"code": 200,"message": "success","data": results}
+
+@app.get("/db4")
+async def db4(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user").raw()
+    results = results.to_py()
+    # Return a JSON response
+    return {"code": 200,"message": "success","data": results}
+
 
 @app.get("/db")
 async def db(req: Request,name: str):
