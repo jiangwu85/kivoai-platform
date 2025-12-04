@@ -43,13 +43,14 @@ async def db(req: Request):
     results = await env.DB.prepare("select * from user").run()
     results = results.results
     results = results.to_py()
+    json_compatible_data = jsonable_encoder(results)
     # Return a JSON response
-    return results
+    return SuccessResponse(data=json_compatible_data)
 @app.get("/db0")
-async def db(req: Request):
+async def db0(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
-    results = results.results
+    results = results.results[0]
     results = results.to_py()
     json_compatible_data = jsonable_encoder(results)
     # Return a JSON response
@@ -57,11 +58,21 @@ async def db(req: Request):
 @app.get("/db1")
 async def db1(req: Request):
     env = req.scope["env"]
-    results = await env.DB.prepare("select * from user").run()
+    results = await env.DB.prepare("select * from user where email='273617974@qq.com'").run()
     results = results.results
     results = results.to_py()
+    json_compatible_data = jsonable_encoder(results)
     # Return a JSON response
-    return {"code": 200,"message": "success","data": results}
+    return SuccessResponse(data=json_compatible_data)
+@app.get("/db2")
+async def db2(req: Request):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user where email=?").bind("273617974@qq.com").run()
+    results = results.results
+    results = results.to_py()
+    json_compatible_data = jsonable_encoder(results)
+    # Return a JSON response
+    return SuccessResponse(data=json_compatible_data)
 @app.post("/login")
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
@@ -75,3 +86,17 @@ async def login(req: Request,lg: Login):
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
+
+@app.post("/login1")
+async def login1(req: Request,lg: Login):
+    env = req.scope["env"]
+    results = await env.DB.prepare("select * from user where email=?").bind(lg.email).run()
+    results = results.results
+    result = results.to_py()
+    data = {
+        "user": result,
+        "accessToken": "1",
+        "refreshToken": "1",
+        "expiresDateTime": time.time_ns(),
+    }
+    return {"code": 200,"message": "success","data": data}
