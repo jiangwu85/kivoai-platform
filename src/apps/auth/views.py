@@ -3,7 +3,7 @@ import time
 from fastapi import APIRouter,Request
 from fastapi.encoders import jsonable_encoder
 from utils.response import SuccessResponse,ErrorResponse
-from core.moudles import Register,Login,User
+from core.moudles import Register,Login
 from crud import common
 
 app = APIRouter()
