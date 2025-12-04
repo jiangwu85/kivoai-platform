@@ -36,6 +36,8 @@ class User(BaseModel):
 
     @field_validator('email')
     def check_email(cls, v):
+        print(cls)
+        print(v)
         if '@' not in v:
             raise ValueError('Email must contain an @ symbol')
         return v
