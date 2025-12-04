@@ -30,14 +30,20 @@ class User(BaseModel):
 
     @field_validator('age')
     def check_age(cls, v):
+        print("age-------0")
+        print(cls)
+        print(v)
+        print("age-------1")
         if v < 0:
             raise ValueError('Age must be a positive number')
         return v
 
     @field_validator('email')
     def check_email(cls, v):
+        print("email-------0")
         print(cls)
         print(v)
+        print("email-------1")
         if '@' not in v:
             raise ValueError('Email must contain an @ symbol')
         return v
