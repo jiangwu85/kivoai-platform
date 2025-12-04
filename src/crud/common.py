@@ -11,14 +11,12 @@ async def register(env: Any,reg: Register):
     results = results.results[0]
     result = results.to_py()
     result = jsonable_encoder(result)
-    await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
 async def login(env: Any,lg: Login):
     results = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(lg.email).run()
     result = results.results[0]
     result = jsonable_encoder(result.to_py())
-    await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
 async def get_user_redis(env: Any,access_token: str):

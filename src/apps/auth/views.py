@@ -1,12 +1,13 @@
+import json
 import time
-from typing import Optional, Any
+from typing import Any
 
-from fastapi import APIRouter, Request, HTTPException, status, Depends, Header
-from fastapi.encoders import jsonable_encoder
-from utils.response import SuccessResponse, ErrorResponse
+from fastapi import APIRouter, Request, HTTPException, Depends, Header
+from starlette.status import HTTP_400_BAD_REQUEST
+
 from core.moudles import Register, Login
 from crud import common
-from starlette.status import HTTP_400_BAD_REQUEST
+from utils.response import SuccessResponse
 
 app = APIRouter()
 
@@ -20,6 +21,7 @@ async def register(req: Request, reg: Register):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
+    await req.scope["env"].REDIS.put(result["id"],json.dumps(result))
     return SuccessResponse(data=data)
 
 
@@ -32,6 +34,7 @@ async def login(req: Request, lg: Login):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
+    await req.scope["env"].REDIS.put(result["id"],json.dumps(result))
     return SuccessResponse(data=data)
 
 
