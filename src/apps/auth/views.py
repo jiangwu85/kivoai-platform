@@ -11,7 +11,7 @@ app = APIRouter()
 
 @app.post("/register", summary="register")
 async def register(req: Request,reg: Register):
-    result = common.register(req.scope["env"], reg)
+    result = await common.register(req.scope["env"], reg)
     data = {
         "user": result,
         "accessToken": "1",
@@ -22,7 +22,7 @@ async def register(req: Request,reg: Register):
 
 @app.post("/login")
 async def login(req: Request,lg: Login):
-    result = await common.register(req.scope["env"],lg)
+    result = await common.login(req.scope["env"],lg)
     data = {
         "user": result,
         "accessToken": "1",

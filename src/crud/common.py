@@ -3,7 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from core.moudles import Register,Login
 from typing import Any
 def register(env: Any,reg: Register):
-    results = env.DB.prepare('INSERT INTO "user" ("email", "password", "status", "role", "firstName", "lastName", "phone") VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
+    results = env.DB.prepare('INSERT INTO user (email, password, status, role, firstName, lastName, phone) VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
     results = results.results[0]
     result = results.to_py()
     return jsonable_encoder(result)
