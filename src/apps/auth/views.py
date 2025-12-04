@@ -1,5 +1,5 @@
 import time
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import APIRouter, Request, HTTPException, status, Depends, Header
 from fastapi.encoders import jsonable_encoder
@@ -33,10 +33,12 @@ async def login(req: Request,lg: Login):
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
-async def getToken(accessToken: str = Header(None)):
-    return accessToken
+async def getCurrentUser(request: Request):
+    headers = request.headers
+    accessToken = headers.get('accessToken')
+    if not accessToken:
+        raise ValueError("Missing authentication!")
+    return getCurrentUser(request.scope["env"], accessToken)
 @app.get("/me")
-async def get_headers_with_header(accessToken: str = Depends(getToken)):
-    return {
-        "accessToken": accessToken
-    }
+async def get_headers_with_header(currentUser: Any = Depends(getCurrentUser)):
+    return currentUser

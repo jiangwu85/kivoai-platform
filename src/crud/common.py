@@ -18,6 +18,15 @@ async def login(env: Any,lg: Login):
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
+async def getUserRedis(env: Any,token: str):
+    userData = await env.REDIS.get(token)
+    if not userData:
+        raise ValueError("user not found")
+    user = json.loads(userData)
+    return user
+
+
+
 
 
 
