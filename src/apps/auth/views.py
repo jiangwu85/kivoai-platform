@@ -66,7 +66,7 @@ async def db1(req: Request):
 async def login(req: Request,lg: Login):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user where email=?").bind(lg.email).run()
-    result = results.results[0]
+    result = results.results
     result = jsonable_encoder(result.to_py())
     data = {
         "user": result,
