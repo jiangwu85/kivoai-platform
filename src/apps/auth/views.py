@@ -39,19 +39,17 @@ async def register1(req: Request,reg: Register):
 async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
-    #results = results.results
-
-
+    results = results.results
+    results = results.to_py()
     # Return a JSON response
     return results
 @app.get("/db0")
 async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
-    #results = results.results
-    results = results.to_py()
+    results = results.results
     # Return a JSON response
-    return SuccessResponse(data=results)
+    return results
 @app.get("/db1")
 async def db1(req: Request):
     env = req.scope["env"]
