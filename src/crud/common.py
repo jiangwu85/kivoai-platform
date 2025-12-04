@@ -18,13 +18,10 @@ async def register(env: Any,reg: Register):
 
 
 async def get_user_by_email(env: Any, email: str):
-    results = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(email).run()
-    results = results.results
-    if len(results) == 0:
-        return None
-    result = results[0]
-    result = jsonable_encoder(result.to_py())
-    return result
+    user = await env.DB.prepare("select id,email,status,role,firstName,lastName,gender,phone,birthDate,location,bio from user where email=?").bind(email).first()
+    if user:
+        return user.to_py()
+    return None
 
 async def login(env: Any,lg: Login):
     user = await get_user_by_email(env, lg.email)
