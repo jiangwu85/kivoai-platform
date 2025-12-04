@@ -6,6 +6,7 @@ from fastapi.encoders import jsonable_encoder
 from utils.response import SuccessResponse, ErrorResponse
 from core.moudles import Register, Login
 from crud import common
+from starlette.status import HTTP_400_BAD_REQUEST
 
 app = APIRouter()
 
@@ -39,7 +40,7 @@ async def login(req: Request, lg: Login):
 async def get_current_user(request: Request,authorization: str = Header(None)):
     print("access_token:"+authorization)
     if not authorization:
-        raise ValueError("Missing authentication!")
+        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Authorization header is required")
     access_token = authorization.replace("Bearer ","")
     return await common.get_user_redis(request.scope["env"], access_token)
 
