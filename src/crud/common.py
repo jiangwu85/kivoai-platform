@@ -22,8 +22,8 @@ async def get_user_redis(env: Any,token: str):
     user_data = await env.REDIS.get(token)
     if not user_data:
         raise ValueError("user not found")
-    #user = json.loads(user_data)
-    return user_data
+    user = json.loads(user_data)
+    return user
 
 
 

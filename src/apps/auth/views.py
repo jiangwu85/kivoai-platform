@@ -39,11 +39,13 @@ async def login(req: Request, lg: Login):
 async def get_current_user(request: Request):
     headers = request.headers
     access_token = headers.get('authorization')
+    print("access_token:"+access_token)
     if not access_token:
         raise ValueError("Missing authentication!")
-    return common.get_user_redis(request.scope["env"], access_token)
+    return await common.get_user_redis(request.scope["env"], access_token)
 
 
 @app.get("/me")
 async def get_headers_with_header(current_user: Any = Depends(get_current_user)):
+    print("current_user:"+current_user)
     return current_user
