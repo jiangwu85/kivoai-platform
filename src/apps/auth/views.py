@@ -3,7 +3,7 @@ import time
 from fastapi import APIRouter,Request
 from fastapi.encoders import jsonable_encoder
 from utils.response import SuccessResponse,ErrorResponse
-from core.moudles import Register,Login
+from core.moudles import Register,Login,User
 from crud import common
 
 app = APIRouter()
@@ -27,6 +27,16 @@ async def login(req: Request,lg: Login):
     data = {
         "lg": jsonable_encoder(lg),
         "user": result,
+        "accessToken": "1",
+        "refreshToken": "1",
+        "expiresDateTime": time.time(),
+    }
+    return SuccessResponse(data=data)
+
+
+@app.post("/user")
+async def user(req: Request,u: User):
+    data = {
         "accessToken": "1",
         "refreshToken": "1",
         "expiresDateTime": time.time(),
