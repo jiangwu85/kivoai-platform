@@ -4,7 +4,7 @@ from typing import Optional
 from core.validator import vali_email
 class Register(BaseModel):
     role: int = Field(min_length=1,max_length=1,default=1)
-    email: str = Field(min_length=5,  default="273617974@qq.com")
+    email: str
     password: str = Field(min_length=6, default="123456")
     firstName: str = Field(min_length=2, default="Jiang")
     lastName: str = Field(min_length=2, default="Wu")
@@ -13,12 +13,12 @@ class Register(BaseModel):
     birthDate: Optional[str] = Field(default="")
     location: Optional[str] = Field(default="")
     bio: Optional[str] = Field(default="")
-    # @field_validator('email')
-    # def validate_email(self, value):
-    #     return vali_email(value)
+    @field_validator('email')
+    def validate_email(self, value):
+        return vali_email(value)
 class Login(BaseModel):
-    email: str = Field(min_length=5,  default="273617974@qq.com")
+    email: str
     password: str = Field(min_length=6, default="123456")
-    # @field_validator("email")
-    # def validate_email(self, value):
-    #     return vali_email(value)
+    @field_validator("email")
+    def validate_email(self, value):
+        return vali_email(value)
