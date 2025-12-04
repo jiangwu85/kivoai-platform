@@ -15,10 +15,9 @@ app = APIRouter()
 async def register(req: Request, reg: Register):
     result = await common.register(req.scope["env"], reg)
     data = {
-        "reg": jsonable_encoder(reg),
         "user": result,
-        "accessToken": "1",
-        "refreshToken": "1",
+        "accessToken": result["id"],
+        "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
@@ -28,10 +27,9 @@ async def register(req: Request, reg: Register):
 async def login(req: Request, lg: Login):
     result = await common.login(req.scope["env"], lg)
     data = {
-        "lg": jsonable_encoder(lg),
         "user": result,
-        "accessToken": "1",
-        "refreshToken": "1",
+        "accessToken": result["id"],
+        "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
