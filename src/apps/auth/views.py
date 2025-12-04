@@ -1,10 +1,11 @@
 import time
 
-from fastapi import APIRouter,Request
+from fastapi import APIRouter, Request, Depends
 from fastapi.encoders import jsonable_encoder
 from utils.response import SuccessResponse,ErrorResponse
 from core.moudles import Register,Login
 from crud import common
+from core.Auth import authenticate
 
 app = APIRouter()
 
@@ -32,3 +33,10 @@ async def login(req: Request,lg: Login):
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
+
+
+@app.post("/out")
+async def logout(req: Request,token: str = Depends(authenticate)):
+    env = req.scope["env"]
+    await env.REDIS.delete(token)
+    return SuccessResponse(data="OK")
