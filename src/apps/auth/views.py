@@ -40,16 +40,16 @@ async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
     #results = results.results
-    results = results.to_py()
-    results = results.to_json()
+
+
     # Return a JSON response
-    return SuccessResponse(data=results)
+    return results
 @app.get("/db0")
 async def db(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").run()
     #results = results.results
-    results = results.to_json()
+    results = results.to_py()
     # Return a JSON response
     return SuccessResponse(data=results)
 @app.get("/db1")
