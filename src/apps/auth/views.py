@@ -32,14 +32,3 @@ async def login(req: Request,lg: Login):
         "expiresDateTime": time.time(),
     }
     return SuccessResponse(data=data)
-
-
-@app.post("/user")
-async def user(req: Request,u: User):
-    data = {
-        "accessToken": "1",
-        "refreshToken": "1",
-        "expiresDateTime": time.time(),
-    }
-    return SuccessResponse(data=data)
-
