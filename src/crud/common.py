@@ -1,21 +1,18 @@
 
-from fastapi import Request
+from fastapi.encoders import jsonable_encoder
 from core.moudles import Register,Login
-async def register(req: Request,reg: Register):
-    env = req.scope["env"]
-    results = await env.DB.prepare("INSERT INTO user (email, password, status, role, firstName, lastName, phone) VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *").bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
-    results = results.results
-    results = results.to_py()
-    return results
+from typing import Any
+async def register(env: Any,reg: Register):
+    results = await env.DB.prepare('INSERT INTO "user" ("email", "password", "status", "role", "firstName", "lastName", "phone") VALUES(?,?, 9, ?, ?, ?, ?) RETURNING *').bind(reg.email,reg.password,reg.role,reg.firstName,reg.lastName,reg.phone).run()
+    results = results.results[0]
+    result = results.to_py()
+    return jsonable_encoder(result)
 
-async def login(req: Request,lg: Login):
-    env = req.scope["env"]
+async def login(env: Any,lg: Login):
     results = await env.DB.prepare("select * from user where email=?").bind(lg.email).run()
-    #results = results.results
-    results = results.to_py()
-    # if len(results)==1:
-    #     return results[0]
-    return results
+    result = results.results[0]
+    return jsonable_encoder(result.to_py())
+
 
 
 
