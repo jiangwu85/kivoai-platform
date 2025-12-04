@@ -40,7 +40,8 @@ async def get_current_user(request: Request,authorization: str = Header(None)):
     print("access_token:"+authorization)
     if not authorization:
         raise ValueError("Missing authentication!")
-    return await common.get_user_redis(request.scope["env"], authorization)
+    access_token = authorization.replace("Bearer ","")
+    return await common.get_user_redis(request.scope["env"], access_token)
 
 
 @app.get("/me")

@@ -18,8 +18,8 @@ async def login(env: Any,lg: Login):
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
-async def get_user_redis(env: Any,token: str):
-    user_data = await env.REDIS.get(token)
+async def get_user_redis(env: Any,access_token: str):
+    user_data = await env.REDIS.get(access_token)
     if not user_data:
         raise ValueError("user not found")
     user = json.loads(user_data)
