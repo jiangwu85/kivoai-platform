@@ -1,17 +1,25 @@
 
-from pydantic import BaseModel,Field
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
+from core.validator import vali_email
 class Register(BaseModel):
-    role: int
-    email: str
-    password: str
-    firstName: str
-    lastName: str
-    gender: Optional[int] = Field(description="gender",default=1,ge=0,le=1)
-    phone: Optional[str] = Field(description="phone",default="")
-    birthDate: Optional[str] = Field(description="birth date",default="")
-    location: Optional[str] = Field(description="location",default="")
-    bio: Optional[str] = Field(description="bio",default="")
+    role: int = Field(min_length=1,max_length=1,default=1)
+    email: str = Field(min_length=5,  default="273617974@qq.com")
+    password: str = Field(min_length=6, default="123456")
+    firstName: str = Field(min_length=2, default="Jiang")
+    lastName: str = Field(min_length=2, default="Wu")
+    gender: Optional[int] = Field(ge=0,le=1,default=1)
+    phone: Optional[str] = Field(default="")
+    birthDate: Optional[str] = Field(default="")
+    location: Optional[str] = Field(default="")
+    bio: Optional[str] = Field(default="")
+
+    @field_validator("user_email")
+    def validate_email(self, value):
+        return vali_email(value)
 class Login(BaseModel):
-    email: str
-    password: str
+    email: str = Field(min_length=5,  default="273617974@qq.com")
+    password: str = Field(min_length=6, default="123456")
+    @field_validator("user_email")
+    def validate_email(self, value):
+        return vali_email(value)
