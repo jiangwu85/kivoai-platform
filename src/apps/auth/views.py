@@ -11,26 +11,22 @@ from utils.response import SuccessResponse
 app = APIRouter()
 
 
+class LoginRespose(BaseModel):
+    user: Any
+    accessToken: str
+    refreshToken: str
+    expiresDateTime: float
+
 @app.post("/register", summary="register")
 async def register(req: Request, reg: Register):
     result = await common.register(req.scope["env"], reg)
-    data = {
-        "user": result,
-        "accessToken": result.id,
-        "refreshToken": result.id,
-        "expiresDateTime": time.time(),
-    }
+    data = LoginRespose(user=result, accessToken=result.id, refreshToken=result.id, expiresDateTime=int(time.time()))
     return SuccessResponse(data=data)
 
 @app.post("/login")
 async def login(req: Request, lg: Login):
     result = await common.login(req.scope["env"], lg)
-    data = {
-        "user": result,
-        "accessToken": result.id,
-        "refreshToken": result.id,
-        "expiresDateTime": time.time(),
-    }
+    data = LoginRespose(user=result, accessToken=result.id, refreshToken=result.id, expiresDateTime=int(time.time()))
     return SuccessResponse(data=data)
 
 async def get_current_user(request: Request,authorization: str = Header(None)):

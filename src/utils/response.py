@@ -12,6 +12,8 @@ def _normalize_payload(data: Any) -> Any:
         return data.model_dump()
     if hasattr(data, "dict"):
         return data.dict()
+    if hasattr(data, "to_py"):
+        return data.to_py()
     if isinstance(data, (set, tuple)):
         return list(data)
     return data
