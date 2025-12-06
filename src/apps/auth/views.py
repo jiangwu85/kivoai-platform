@@ -43,8 +43,8 @@ async def profile(request: Request,pfModel: ProfileModel,current_user: Any = Dep
 def loginSuccessResponse(user: Any) -> LoginSuccessModel:
     data = LoginSuccessModel(
         user=user,
-        accessToken=user["id"],
-        refreshToken=user["id"],
+        accessToken=str(user["id"]),
+        refreshToken=str(user["id"]),
         expiresDateTime=int(time.time())
     )
     return jsonable_encoder(data)
