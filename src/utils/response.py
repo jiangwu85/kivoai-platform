@@ -2,20 +2,14 @@ from dataclasses import asdict, is_dataclass
 from typing import Any
 from fastapi.responses import ORJSONResponse as Response
 from fastapi import status as ResponseStatus
+from fastapi.encoders import jsonable_encoder
 
 def _normalize_payload(data: Any) -> Any:
     if data is None:
         return {}
-    if is_dataclass(data):
-        return asdict(data)
-    if hasattr(data, "model_dump"):
-        return data.model_dump()
-    if hasattr(data, "dict"):
-        return data.dict()
     if hasattr(data, "to_py"):
         return data.to_py()
-    if isinstance(data, (set, tuple)):
-        return list(data)
+    data = jsonable_encoder(data)
     return data
 
 class SuccessResponse(Response):
