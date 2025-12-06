@@ -1,11 +1,10 @@
-import json
 import time
-from typing import Any
 
 from fastapi import APIRouter, Request, HTTPException, Depends, Header
 from starlette.status import HTTP_400_BAD_REQUEST
+from typing import Any
 
-from core.moudles import Register, Login
+from core.moudles import Register, Login, Profile
 from crud import common
 from utils.response import SuccessResponse
 
@@ -21,9 +20,7 @@ async def register(req: Request, reg: Register):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    await req.scope["env"].REDIS.put(result["id"],json.dumps(result))
     return SuccessResponse(data=data)
-
 
 @app.post("/login")
 async def login(req: Request, lg: Login):
@@ -34,9 +31,7 @@ async def login(req: Request, lg: Login):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    await req.scope["env"].REDIS.put(result["id"],json.dumps(result))
     return SuccessResponse(data=data)
-
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
     print("access_token:"+authorization)
@@ -45,7 +40,12 @@ async def get_current_user(request: Request,authorization: str = Header(None)):
     access_token = authorization.replace("Bearer ","")
     return await common.get_user_redis(request.scope["env"], access_token)
 
-
 @app.get("/me")
 async def get_headers_with_header(current_user: Any = Depends(get_current_user)):
     return SuccessResponse(data=current_user)
+
+@app.get("/profile")
+async def profile(request: Request,pf: Profile,current_user: Any = Depends(get_current_user)):
+    pf.id = current_user.id
+    await common.profile(env=request.scope["env"], pf=pf)
+    return SuccessResponse(data=True)
