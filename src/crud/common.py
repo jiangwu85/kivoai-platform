@@ -12,7 +12,9 @@ async def register(env: Any,reg: Register):
     user = await get_user_by_email(env, reg.email)
     if user:
         raise HTTPException(status_code=400, detail="email already exists")
-    results = await env.DB.prepare(f"INSERT INTO user ({registerInfoStr}) VALUES(?,?,9,?) RETURNING *").bind(reg.email,reg.password,reg.role).run()
+    sql = f"INSERT INTO user ({registerInfoStr}) VALUES(?,?,9,?) RETURNING *"
+    print(sql)
+    results = await env.DB.prepare(sql).bind(reg.email,reg.password,reg.role).run()
     results = results.results[0]
     result = results.to_py()
     result = jsonable_encoder(result)
