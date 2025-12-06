@@ -3,6 +3,7 @@ import json
 from fastapi import HTTPException
 from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from typing import Any
+from fastapi.encoders import jsonable_encoder
 
 from core.moudles import RegisterModel, LoginModel, ProfileModel
 
@@ -17,7 +18,7 @@ async def register(env: Any,regModel: RegisterModel):
     results = await env.DB.prepare(sql).bind(regModel.email,regModel.password,regModel.role).run()
     results = results.results[0]
     result = results.to_py()
-    await env.REDIS.put(result["id"],json.dumps(result))
+    await env.REDIS.put(result["id"],json.dumps(jsonable_encoder(result)))
     return result
 
 queryUserInfo = ["id", "email", "status", "role","vip","vipEndTime","firstName","lastName","gender","phone","birthDate","location","bio","createTime","updateTime"]
@@ -38,13 +39,13 @@ async def login(env: Any,lgModel: LoginModel):
     result = await get_user_by_email(env, lgModel.email)
     if not result:
         raise HTTPException(HTTP_401_UNAUTHORIZED, "email or password error!")
-    await env.REDIS.put(result["id"],json.dumps(result))
+    await env.REDIS.put(result["id"],json.dumps(jsonable_encoder(result)))
     return result
 
 async def profile(env: Any,pfModel: ProfileModel):
     await env.DB.prepare(f"update user set firstName=?,lastName=?,gender=?,phone=?,birthDate=?,location=?,bio=? where id=?").bind(pfModel.firstName,pfModel.lastName,pfModel.gender,pfModel.phone,pfModel.birthDate,pfModel.location,pfModel.bio,pfModel.id).run()
-    user = await get_user_by_id(env,pfModel.id)
-    await env.REDIS.put(user["id"],json.dumps(user))
+    result = await get_user_by_id(env,pfModel.id)
+    await env.REDIS.put(result["id"],json.dumps(jsonable_encoder(result)))
     return None
 
 async def get_user_redis(env: Any,access_token: str):
