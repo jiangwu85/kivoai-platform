@@ -26,21 +26,21 @@ queryUserInfoStr = ",".join(queryUserInfo)
 async def get_user_by_email(env: Any, email: str):
     user = await env.DB.prepare(f"select {queryUserInfoStr} from user where email=?").bind(email).first()
     if user:
-        return user.to_py()
+        return jsonable_encoder(user.to_py())
     return None
 
 async def get_user_by_id(env: Any, id: int):
     user = await env.DB.prepare(f"select {queryUserInfoStr} from user where id=?").bind(id).first()
     if user:
-        return user.to_py()
+        return jsonable_encoder(user.to_py())
     return None
 
 async def login(env: Any,lg: Login):
-    user = await get_user_by_email(env, lg.email)
-    if not user:
+    result = await get_user_by_email(env, lg.email)
+    if not result:
         raise HTTPException(status_code=400, detail="email or password error!")
-    await env.REDIS.put(user["id"],json.dumps(user))
-    return user
+    await env.REDIS.put(result["id"],json.dumps(result))
+    return result
 
 async def profile(env: Any,pf: Profile):
     await env.DB.prepare(f"update user set firstName=?,lastName=?,gender=?,phone=?,birthDate=?,location=?,bio=? where id=?").bind(pf.firstName,pf.lastName,pf.gender,pf.phone,pf.birthDate,pf.location,pf.bio,pf.id).run()
