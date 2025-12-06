@@ -34,7 +34,6 @@ async def login(req: Request, lg: Login):
     return SuccessResponse(data=data)
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
-    print("access_token:"+authorization)
     if not authorization:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Authorization header is required")
     access_token = authorization.replace("Bearer ","")
