@@ -3,10 +3,6 @@ from fastapi import status as ResponseStatus
 
 
 class SuccessResponse(Response):
-    """
-    成功响应
-    """
-
     def __init__(
             self,
             data=None,
@@ -25,10 +21,6 @@ class SuccessResponse(Response):
 
 
 class ErrorResponse(Response):
-    """
-    失败响应
-    """
-
     def __init__(self, msg=None, code=ResponseStatus.HTTP_400_BAD_REQUEST, status=ResponseStatus.HTTP_200_OK, **kwargs):
         self.data = {
             "code": code,

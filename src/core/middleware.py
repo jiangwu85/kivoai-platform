@@ -12,9 +12,6 @@ from core.logger import logger
 
 
 def write_request_log(request: Request, response: Response):
-    """
-    记录请求日志
-    """
     http_version = f"http/{request.scope['http_version']}"
     content_length = response.raw_headers[0][1]
     process_time = response.headers["X-Process-Time"]
@@ -23,12 +20,6 @@ def write_request_log(request: Request, response: Response):
 
 
 def register_middleware(app: FastAPI):
-    """
-    记录请求日志中间件
-    :param app:
-    :return:
-    """
-
     @app.middleware("http")
     async def request_log_middleware(request: Request, call_next):
         start_time = time.time()

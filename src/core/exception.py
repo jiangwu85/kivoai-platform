@@ -3,7 +3,7 @@
 # @Creaet Time    : 2021/10/19 15:47
 # @File           : exception.py
 # @IDE            : PyCharm
-# @desc           : 全局异常处理
+# @desc           : Global exception handling
 
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
@@ -24,16 +24,16 @@ class CustomException(Exception):
 
 def register_exception(app: FastAPI):
     """
-    异常捕捉
+    Exception interception
     """
 
     @app.exception_handler(CustomException)
     async def custom_exception_handler(request: Request, exc: CustomException):
         """
-        自定义异常
+        Custom exception handler
         """
-        print("请求地址", request.url.__str__())
-        print("捕捉到重写CustomException异常异常：custom_exception_handler")
+        print("Request URL", request.url.__str__())
+        print("Caught overridden CustomException: custom_exception_handler")
         print(exc.desc)
         print(exc.msg)
         return JSONResponse(
@@ -44,10 +44,10 @@ def register_exception(app: FastAPI):
     @app.exception_handler(StarletteHTTPException)
     async def unicorn_exception_handler(request: Request, exc: StarletteHTTPException):
         """
-        重写HTTPException异常处理器
+        Override HTTPException handler
         """
-        print("请求地址", request.url.__str__())
-        print("捕捉到重写HTTPException异常异常：unicorn_exception_handler")
+        print("Request URL", request.url.__str__())
+        print("Caught overridden HTTPException: unicorn_exception_handler")
         print(exc.detail)
         return JSONResponse(
             status_code=200,
@@ -60,21 +60,21 @@ def register_exception(app: FastAPI):
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request, exc: RequestValidationError):
         """
-        重写请求验证异常处理器
+        Override request validation handler
         """
-        print("请求地址", request.url.__str__())
-        print("捕捉到重写请求验证异常异常：validation_exception_handler")
+        print("Request URL", request.url.__str__())
+        print("Caught validation exception: validation_exception_handler")
         print(exc.errors())
         msg = exc.errors()[0].get("msg")
         if msg == "field required":
-            msg = "请求失败，缺少必填项！"
+            msg = "Request failed, missing required field!"
         elif msg == "value is not a valid list":
             print(exc.errors())
-            msg = f"类型错误，提交参数应该为列表！"
+            msg = "Type error, payload must be a list!"
         elif msg == "value is not a valid int":
-            msg = f"类型错误，提交参数应该为整数！"
+            msg = "Type error, payload must be an integer!"
         elif msg == "value could not be parsed to a boolean":
-            msg = f"类型错误，提交参数应该为布尔值！"
+            msg = "Type error, payload must be a boolean!"
         return JSONResponse(
             status_code=200,
             content=jsonable_encoder(
@@ -82,17 +82,17 @@ def register_exception(app: FastAPI):
                     "message": msg,
                     "body": exc.body,
                     "code": status.HTTP_400_BAD_REQUEST
-                 }
+                }
             ),
         )
 
     @app.exception_handler(ValueError)
     async def value_exception_handler(request: Request, exc: ValueError):
         """
-        捕获值异常
+        Capture ValueError
         """
-        print("请求地址", request.url.__str__())
-        print("捕捉到值异常：value_exception_handler")
+        print("Request URL", request.url.__str__())
+        print("Caught ValueError: value_exception_handler")
         print(exc.__str__())
         return JSONResponse(
             status_code=200,
@@ -107,10 +107,10 @@ def register_exception(app: FastAPI):
     @app.exception_handler(Exception)
     async def all_exception_handler(request: Request, exc: Exception):
         """
-        捕获全部异常
+        Capture all remaining exceptions
         """
-        print("请求地址", request.url.__str__())
-        print("捕捉到全局异常：all_exception_handler")
+        print("Request URL", request.url.__str__())
+        print("Caught global exception: all_exception_handler")
         traceback.print_exc()
         return JSONResponse(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
