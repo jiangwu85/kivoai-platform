@@ -3,6 +3,7 @@ import time
 from fastapi import APIRouter, Request, HTTPException, Depends, Header
 from starlette.status import HTTP_400_BAD_REQUEST
 from typing import Any
+from fastapi.encoders import jsonable_encoder
 
 from core.moudles import Register, Login, Profile
 from crud import common
@@ -20,7 +21,7 @@ async def register(req: Request, reg: Register):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    return SuccessResponse(data=data)
+    return SuccessResponse(data=jsonable_encoder(data))
 
 @app.post("/login")
 async def login(req: Request, lg: Login):
@@ -31,7 +32,7 @@ async def login(req: Request, lg: Login):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    return SuccessResponse(data=data)
+    return SuccessResponse(data=jsonable_encoder(data))
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
     if not authorization:
@@ -45,6 +46,6 @@ async def get_headers_with_header(current_user: Any = Depends(get_current_user))
 
 @app.put("/profile")
 async def profile(request: Request,pf: Profile,current_user: Any = Depends(get_current_user)):
-    pf.id = current_user.id
+    pf.id = current_user["id"]
     await common.profile(env=request.scope["env"], pf=pf)
     return SuccessResponse(data=None)

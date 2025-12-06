@@ -17,7 +17,7 @@ async def register(env: Any,reg: Register):
     results = await env.DB.prepare(sql).bind(reg.email,reg.password,reg.role).run()
     results = results.results[0]
     result = results.to_py()
-    result = jsonable_encoder(result)
+    #result = jsonable_encoder(result)
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
@@ -26,13 +26,13 @@ queryUserInfoStr = ",".join(queryUserInfo)
 async def get_user_by_email(env: Any, email: str):
     user = await env.DB.prepare(f"select {queryUserInfoStr} from user where email=?").bind(email).first()
     if user:
-        return jsonable_encoder(user.to_py())
+        return user.to_py()
     return None
 
 async def get_user_by_id(env: Any, id: int):
     user = await env.DB.prepare(f"select {queryUserInfoStr} from user where id=?").bind(id).first()
     if user:
-        return jsonable_encoder(user.to_py())
+        return user.to_py()
     return None
 
 async def login(env: Any,lg: Login):
@@ -52,7 +52,7 @@ async def get_user_redis(env: Any,access_token: str):
     user_data = await env.REDIS.get(access_token)
     if not user_data:
         raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="authorization failed")
-    user = json.loads(user_data).to_py()
+    user = json.loads(user_data)
     return user
 
 
