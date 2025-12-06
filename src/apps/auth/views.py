@@ -48,4 +48,4 @@ async def get_headers_with_header(current_user: Any = Depends(get_current_user))
 async def profile(request: Request,pf: Profile,current_user: Any = Depends(get_current_user)):
     pf.id = current_user.id
     await common.profile(env=request.scope["env"], pf=pf)
-    return SuccessResponse(data=True)
+    return SuccessResponse(data=None)
