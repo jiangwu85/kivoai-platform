@@ -6,7 +6,7 @@ from core.moudles import Register, Login, Profile
 from typing import Any
 from starlette.status import HTTP_400_BAD_REQUEST
 
-registerInfo = ['id', 'email', 'status', 'role']
+registerInfo = ['email','password', 'status', 'role']
 registerInfoStr = ",".join(registerInfo)
 async def register(env: Any,reg: Register):
     user = await get_user_by_email(env, reg.email)

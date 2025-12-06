@@ -8,7 +8,7 @@ class Login(BaseModel):
     password: str = Field(min_length=6, default="123456")
 
     @field_validator('email')
-    def check_email(cls, v):
+    def check_email(self, v):
         return vali_email(v)
 
 class Register(Login):
