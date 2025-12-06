@@ -21,7 +21,13 @@ async def register(req: Request, regModel: RegisterModel):
 @app.post("/login")
 async def login(req: Request, lg: LoginModel):
     result = await common.login(req.scope["env"], lg)
-    return SuccessResponse(loginSuccessResponse(result))
+    data = {
+        "user": result,
+        "accessToken": result["id"],
+        "refreshToken": result["id"],
+        "expiresDateTime": time.time(),
+    }
+    return SuccessResponse(jsonable_encoder(data))
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
     if not authorization:
