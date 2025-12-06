@@ -5,7 +5,7 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from typing import Any
 from fastapi.encoders import jsonable_encoder
 
-from core.moudles import Register, Login, Profile
+from core.moudles import RegisterModel, LoginModel, ProfileModel
 from crud import common
 from utils.response import SuccessResponse
 
@@ -13,8 +13,8 @@ app = APIRouter()
 
 
 @app.post("/register", summary="register")
-async def register(req: Request, reg: Register):
-    result = await common.register(req.scope["env"], reg)
+async def register(req: Request, regModel: RegisterModel):
+    result = await common.register(req.scope["env"], regModel)
     data = {
         "user": result,
         "accessToken": result["id"],
@@ -24,7 +24,7 @@ async def register(req: Request, reg: Register):
     return SuccessResponse(data=jsonable_encoder(data))
 
 @app.post("/login")
-async def login(req: Request, lg: Login):
+async def login(req: Request, lg: LoginModel):
     result = await common.login(req.scope["env"], lg)
     data = {
         "user": result,
@@ -45,7 +45,7 @@ async def get_headers_with_header(current_user: Any = Depends(get_current_user))
     return SuccessResponse(data=current_user)
 
 @app.put("/profile")
-async def profile(request: Request,pf: Profile,current_user: Any = Depends(get_current_user)):
+async def profile(request: Request,pf: ProfileModel,current_user: Any = Depends(get_current_user)):
     pf.id = current_user["id"]
     await common.profile(env=request.scope["env"], pf=pf)
     return SuccessResponse(data=None)

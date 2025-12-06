@@ -2,19 +2,19 @@ import json
 
 from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
-from core.moudles import Register, Login, Profile
+from core.moudles import RegisterModel, LoginModel, ProfileModel
 from typing import Any
 from starlette.status import HTTP_400_BAD_REQUEST
 
 registerInfo = ['email','password', 'status', 'role']
 registerInfoStr = ",".join(registerInfo)
-async def register(env: Any,reg: Register):
-    user = await get_user_by_email(env, reg.email)
+async def register(env: Any,regModel: RegisterModel):
+    user = await get_user_by_email(env, regModel.email)
     if user:
         raise HTTPException(status_code=400, detail="email already exists")
     sql = f"INSERT INTO user ({registerInfoStr}) VALUES(?,?,9,?) RETURNING *"
     print(sql)
-    results = await env.DB.prepare(sql).bind(reg.email,reg.password,reg.role).run()
+    results = await env.DB.prepare(sql).bind(regModel.email,regModel.password,regModel.role).run()
     results = results.results[0]
     result = results.to_py()
     #result = jsonable_encoder(result)
@@ -35,16 +35,16 @@ async def get_user_by_id(env: Any, id: int):
         return user.to_py()
     return None
 
-async def login(env: Any,lg: Login):
-    result = await get_user_by_email(env, lg.email)
+async def login(env: Any,lgModel: LoginModel):
+    result = await get_user_by_email(env, lgModel.email)
     if not result:
         raise HTTPException(status_code=400, detail="email or password error!")
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
-async def profile(env: Any,pf: Profile):
-    await env.DB.prepare(f"update user set firstName=?,lastName=?,gender=?,phone=?,birthDate=?,location=?,bio=? where id=?").bind(pf.firstName,pf.lastName,pf.gender,pf.phone,pf.birthDate,pf.location,pf.bio,pf.id).run()
-    user = await get_user_by_id(env,pf.id)
+async def profile(env: Any,pfModel: ProfileModel):
+    await env.DB.prepare(f"update user set firstName=?,lastName=?,gender=?,phone=?,birthDate=?,location=?,bio=? where id=?").bind(pfModel.firstName,pfModel.lastName,pfModel.gender,pfModel.phone,pfModel.birthDate,pfModel.location,pfModel.bio,pfModel.id).run()
+    user = await get_user_by_id(env,pfModel.id)
     await env.REDIS.put(user["id"],json.dumps(user))
     return None
 

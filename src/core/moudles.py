@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from core.validator import vali_email
 
-class Login(BaseModel):
+class LoginModel(BaseModel):
     email: str = Field(min_length=5,  default="273617974@qq.com")
     password: str = Field(min_length=6, default="123456")
 
@@ -11,11 +11,11 @@ class Login(BaseModel):
     # def check_email(self, v):
     #     return vali_email(v)
 
-class Register(Login):
+class RegisterModel(LoginModel):
     role: int
 
-class Profile(BaseModel):
-    id: int
+class ProfileModel(BaseModel):
+    id: Optional[int] = Field(default=0)
     firstName: str = Field(min_length=2, default="Jiang")
     lastName: str = Field(min_length=2, default="Wu")
     gender: Optional[int] = Field(default=1)
