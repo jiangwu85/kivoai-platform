@@ -1,7 +1,10 @@
+import time
 
 from pydantic import BaseModel, Field, field_validator
-from typing import Optional
+from typing import Optional, Any
 from core.validator import vali_email
+
+
 
 class LoginModel(BaseModel):
     email: str = Field(min_length=5,  default="273617974@qq.com")
@@ -22,3 +25,11 @@ class ProfileModel(BaseModel):
     birthDate: Optional[str] = Field(default="")
     location: Optional[str] = Field(default="")
     bio: Optional[str] = Field(default="")
+
+class LoginSuccessModel(BaseModel):
+    user: Any
+    accessToken: str
+    refreshToken: str
+    expiresDateTime: int
+
+

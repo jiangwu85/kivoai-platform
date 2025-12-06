@@ -5,34 +5,23 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from typing import Any
 from fastapi.encoders import jsonable_encoder
 
-from core.moudles import RegisterModel, LoginModel, ProfileModel
+from core.moudles import RegisterModel, LoginModel, ProfileModel, LoginSuccessModel
 from crud import common
 from utils.response import SuccessResponse
 
 app = APIRouter()
 
 
+
 @app.post("/register", summary="register")
 async def register(req: Request, regModel: RegisterModel):
     result = await common.register(req.scope["env"], regModel)
-    data = {
-        "user": result,
-        "accessToken": result["id"],
-        "refreshToken": result["id"],
-        "expiresDateTime": time.time(),
-    }
-    return SuccessResponse(jsonable_encoder(data))
+    return SuccessResponse(loginSuccessResponse(result))
 
 @app.post("/login")
 async def login(req: Request, lg: LoginModel):
     result = await common.login(req.scope["env"], lg)
-    data = {
-        "user": result,
-        "accessToken": result["id"],
-        "refreshToken": result["id"],
-        "expiresDateTime": time.time(),
-    }
-    return SuccessResponse(jsonable_encoder(data))
+    return SuccessResponse(loginSuccessResponse(result))
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
     if not authorization:
@@ -49,3 +38,13 @@ async def profile(request: Request,pfModel: ProfileModel,current_user: Any = Dep
     pfModel.id = current_user["id"]
     await common.profile(request.scope["env"], pfModel)
     return SuccessResponse(None)
+
+
+def loginSuccessResponse(user: Any) -> LoginSuccessModel:
+    data = LoginSuccessModel(
+        user=user,
+        accessToken=user["id"],
+        refreshToken=user["id"],
+        expiresDateTime=int(time.time())
+    )
+    return jsonable_encoder(data)
