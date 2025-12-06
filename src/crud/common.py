@@ -1,10 +1,10 @@
 import json
 
 from fastapi import HTTPException
-from fastapi.encoders import jsonable_encoder
-from core.moudles import RegisterModel, LoginModel, ProfileModel
+from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from typing import Any
-from starlette.status import HTTP_400_BAD_REQUEST,HTTP_401_BAD_REQUEST
+
+from core.moudles import RegisterModel, LoginModel, ProfileModel
 
 registerInfo = ['email','password', 'status', 'role']
 registerInfoStr = ",".join(registerInfo)
@@ -37,7 +37,7 @@ async def get_user_by_id(env: Any, id: int):
 async def login(env: Any,lgModel: LoginModel):
     result = await get_user_by_email(env, lgModel.email)
     if not result:
-        raise HTTPException(HTTP_401_BAD_REQUEST, "email or password error!")
+        raise HTTPException(HTTP_401_UNAUTHORIZED, "email or password error!")
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
@@ -50,7 +50,7 @@ async def profile(env: Any,pfModel: ProfileModel):
 async def get_user_redis(env: Any,access_token: str):
     user_data = await env.REDIS.get(access_token)
     if not user_data:
-        raise HTTPException(HTTP_401_BAD_REQUEST, "authorization failed")
+        raise HTTPException(HTTP_401_UNAUTHORIZED, "authorization failed")
     user = json.loads(user_data)
     return user
 
