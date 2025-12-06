@@ -21,7 +21,7 @@ class SuccessResponse(Response):
             "data": data,
         }
         self.data.update(kwargs)
-        super().__init__(content=self.data, status_code=status)
+        super().__init__(self.data, status)
 
 
 class ErrorResponse(Response):
@@ -35,4 +35,4 @@ class ErrorResponse(Response):
             "message": msg
         }
         self.data.update(kwargs)
-        super().__init__(content=self.data, status_code=status)
+        super().__init__(self.data, status)

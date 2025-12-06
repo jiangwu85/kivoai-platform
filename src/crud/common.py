@@ -4,20 +4,19 @@ from fastapi import HTTPException
 from fastapi.encoders import jsonable_encoder
 from core.moudles import RegisterModel, LoginModel, ProfileModel
 from typing import Any
-from starlette.status import HTTP_400_BAD_REQUEST
+from starlette.status import HTTP_400_BAD_REQUEST,HTTP_401_BAD_REQUEST
 
 registerInfo = ['email','password', 'status', 'role']
 registerInfoStr = ",".join(registerInfo)
 async def register(env: Any,regModel: RegisterModel):
     user = await get_user_by_email(env, regModel.email)
     if user:
-        raise HTTPException(status_code=400, detail="email already exists")
+        raise HTTPException(HTTP_400_BAD_REQUEST, "email already exists")
     sql = f"INSERT INTO user ({registerInfoStr}) VALUES(?,?,9,?) RETURNING *"
     print(sql)
     results = await env.DB.prepare(sql).bind(regModel.email,regModel.password,regModel.role).run()
     results = results.results[0]
     result = results.to_py()
-    #result = jsonable_encoder(result)
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
@@ -38,7 +37,7 @@ async def get_user_by_id(env: Any, id: int):
 async def login(env: Any,lgModel: LoginModel):
     result = await get_user_by_email(env, lgModel.email)
     if not result:
-        raise HTTPException(status_code=400, detail="email or password error!")
+        raise HTTPException(HTTP_401_BAD_REQUEST, "email or password error!")
     await env.REDIS.put(result["id"],json.dumps(result))
     return result
 
@@ -51,7 +50,7 @@ async def profile(env: Any,pfModel: ProfileModel):
 async def get_user_redis(env: Any,access_token: str):
     user_data = await env.REDIS.get(access_token)
     if not user_data:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="authorization failed")
+        raise HTTPException(HTTP_401_BAD_REQUEST, "authorization failed")
     user = json.loads(user_data)
     return user
 

@@ -6,10 +6,9 @@ from core.validator import vali_email
 class LoginModel(BaseModel):
     email: str = Field(min_length=5,  default="273617974@qq.com")
     password: str = Field(min_length=6, default="123456")
-
-    # @field_validator('email')
-    # def check_email(self, v):
-    #     return vali_email(v)
+    @field_validator('email')
+    def check_email(cls, v):
+        return vali_email(v)
 
 class RegisterModel(LoginModel):
     role: int

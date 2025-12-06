@@ -21,7 +21,7 @@ async def register(req: Request, regModel: RegisterModel):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    return SuccessResponse(data=jsonable_encoder(data))
+    return SuccessResponse(jsonable_encoder(data))
 
 @app.post("/login")
 async def login(req: Request, lg: LoginModel):
@@ -32,20 +32,20 @@ async def login(req: Request, lg: LoginModel):
         "refreshToken": result["id"],
         "expiresDateTime": time.time(),
     }
-    return SuccessResponse(data=jsonable_encoder(data))
+    return SuccessResponse(jsonable_encoder(data))
 
 async def get_current_user(request: Request,authorization: str = Header(None)):
     if not authorization:
-        raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Authorization header is required")
+        raise HTTPException(HTTP_400_BAD_REQUEST, "Authorization header is required")
     access_token = authorization.replace("Bearer ","")
     return await common.get_user_redis(request.scope["env"], access_token)
 
 @app.get("/me")
 async def get_headers_with_header(current_user: Any = Depends(get_current_user)):
-    return SuccessResponse(data=current_user)
+    return SuccessResponse(current_user)
 
 @app.put("/profile")
-async def profile(request: Request,pf: ProfileModel,current_user: Any = Depends(get_current_user)):
-    pf.id = current_user["id"]
-    await common.profile(env=request.scope["env"], pf=pf)
-    return SuccessResponse(data=None)
+async def profile(request: Request,pfModel: ProfileModel,current_user: Any = Depends(get_current_user)):
+    pfModel.id = current_user["id"]
+    await common.profile(request.scope["env"], pfModel)
+    return SuccessResponse(None)
