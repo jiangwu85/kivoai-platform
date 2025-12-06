@@ -6,6 +6,8 @@ from application import urls
 from core import register_exception
 from starlette.middleware.cors import CORSMiddleware
 from starlette.staticfiles import StaticFiles
+
+from utils.response import SuccessResponse
 from utils.tools import import_module
 
 environment = jinja2.Environment()
@@ -60,9 +62,13 @@ async def redis(req: Request,key: str,val: str):
 async def db1(req: Request):
     env = req.scope["env"]
     results = await env.DB.prepare("select * from user").first()
-    results = results.to_py()
-    # Return a JSON response
-    return {"code": 200,"message": "success","data": results}
+    result = results.to_py()
+    data = {
+        "user": result,
+        "accessToken": result["id"],
+        "refreshToken": result["id"]
+    }
+    return SuccessResponse(data=data)
 
 @app.get("/db2")
 async def db2(req: Request):
