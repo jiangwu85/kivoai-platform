@@ -5,7 +5,7 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from typing import Any
 from fastapi.encoders import jsonable_encoder
 
-from core.moudles import RegisterModel, LoginModel, ProfileModel, LoginSuccessModel
+from core.moudles import RegisterModel, LoginModel, ProfileModel
 from crud import common
 from utils.response import SuccessResponse
 
@@ -40,11 +40,11 @@ async def profile(request: Request,pfModel: ProfileModel,current_user: Any = Dep
     return SuccessResponse(None)
 
 
-def loginSuccessResponse(user: Any) -> LoginSuccessModel:
-    data = LoginSuccessModel(
-        user=user,
-        accessToken=str(user["id"]),
-        refreshToken=str(user["id"]),
-        expiresDateTime=int(time.time())
-    )
+def loginSuccessResponse(user: Any):
+    data = {
+        "user":user,
+        "accessToken":str(user["id"]),
+        "refreshToken":str(user["id"]),
+        "expiresDateTime":int(time.time())
+    }
     return data
