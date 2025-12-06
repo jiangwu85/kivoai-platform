@@ -23,3 +23,7 @@ class ProfileModel(BaseModel):
     birthDate: Optional[str] = Field(default="")
     location: Optional[str] = Field(default="")
     bio: Optional[str] = Field(default="")
+
+class PasswordModel(BaseModel):
+    id: Optional[int] = Field(default=0)
+    password: str = Field(min_length=6, default="123456")

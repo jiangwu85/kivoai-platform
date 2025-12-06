@@ -5,7 +5,7 @@ from starlette.status import HTTP_400_BAD_REQUEST
 from typing import Any
 from fastapi.encoders import jsonable_encoder
 
-from core.moudles import RegisterModel, LoginModel, ProfileModel
+from core.moudles import RegisterModel, LoginModel, ProfileModel, PasswordModel
 from crud import common
 from utils.response import SuccessResponse
 
@@ -37,6 +37,12 @@ async def get_headers_with_header(current_user: Any = Depends(get_current_user))
 async def profile(request: Request,pfModel: ProfileModel,current_user: Any = Depends(get_current_user)):
     pfModel.id = current_user["id"]
     await common.profile(request.scope["env"], pfModel)
+    return SuccessResponse(None)
+
+@app.put("/password")
+async def profile(request: Request,pwModel: PasswordModel,current_user: Any = Depends(get_current_user)):
+    pwModel.id = current_user["id"]
+    await common.password(request.scope["env"], pwModel)
     return SuccessResponse(None)
 
 

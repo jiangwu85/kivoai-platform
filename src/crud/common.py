@@ -5,7 +5,7 @@ from starlette.status import HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from typing import Any
 from fastapi.encoders import jsonable_encoder
 
-from core.moudles import RegisterModel, LoginModel, ProfileModel
+from core.moudles import RegisterModel, LoginModel, ProfileModel, PasswordModel
 
 registerInfo = ['email','password', 'status', 'role']
 registerInfoStr = ",".join(registerInfo)
@@ -46,6 +46,10 @@ async def profile(env: Any,pfModel: ProfileModel):
     await env.DB.prepare(f"update user set firstName=?,lastName=?,gender=?,phone=?,birthDate=?,location=?,bio=? where id=?").bind(pfModel.firstName,pfModel.lastName,pfModel.gender,pfModel.phone,pfModel.birthDate,pfModel.location,pfModel.bio,pfModel.id).run()
     result = await get_user_by_id(env,pfModel.id)
     await env.REDIS.put(result["id"],json.dumps(jsonable_encoder(result)))
+    return None
+
+async def password(env: Any,pwModel: PasswordModel):
+    await env.DB.prepare(f"update user set password=? where id=?").bind(pwModel.password,pwModel.id).run()
     return None
 
 async def get_user_redis(env: Any,access_token: str):
